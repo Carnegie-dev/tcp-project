@@ -1,0 +1,17 @@
+*.o
+*.a
+*.obj
+*.exe
+*.log
+*.txt
+build/
+bazel-bin/
+bazel-Course/
+bazel-out/
+bazel-testlogs/
+MODULE.bazel
+MODULE.bazel.lock
+WORKSPACE.bazel
+
+network_main
+asynchronous_cancellation

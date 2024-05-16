@@ -1,0 +1,148 @@
+###############
+#
+# network_utils
+#
+###############
+
+cc_library(
+  name = "network_utils",
+  srcs = [
+    "network_utils/network_utils.cpp",
+    "network_utils/tcp_client.cpp",
+  ],
+  hdrs = ["network_utils/network_utils.h"],
+  visibility = ["//visibility:public"],
+)
+
+
+#################
+#
+# tcp_client_main
+#
+#################
+
+cc_binary(
+  name = "tcp_client_main",
+  srcs = ["network_utils/tcp_client.cpp"],
+)
+
+
+##################
+#
+# ClientDBManager
+#
+##################
+
+cc_library(
+  name = "TcpClientDBManagerInterface",
+  hdrs = ["TcpClientDBManagerInterface.h"],
+  visibility = ["//visibility:public"],
+)
+cc_library(
+  name = "TcpClientDBManager",
+  srcs = [
+    "TcpClientDBManager.h",
+    "TcpClientDBManager.cpp",
+  ],
+  deps = [
+    ":TcpClientDBManagerInterface",
+    "TcpServerControllerInterface",
+  ],
+  visibility = ["//visibility:public"],
+)
+
+######################
+#
+# ClientServiceManager
+#
+######################
+
+cc_library(
+  name = "TcpClientServiceManagerInterface",
+  hdrs = ["TcpClientServiceManagerInterface.h"],
+  visibility = ["//visibility:public"],
+)
+cc_library(
+  name = "TcpClientServiceManager",
+  srcs = [
+    "TcpClientServiceManager.h",
+    "TcpClientServiceManager.cpp",
+  ],
+  deps = [
+    ":TcpClientServiceManagerInterface",
+    "TcpServerControllerInterface",
+  ],
+  visibility = ["//visibility:public"],
+)
+
+
+#######################
+#
+# NewConnectionAcceptor
+#
+#######################
+
+cc_library(
+  name = "TcpNewConnectionAcceptorInterface",
+  hdrs = ["TcpNewConnectionAcceptorInterface.h"],
+  visibility = ["//visibility:public"],
+)
+cc_library(
+  name = "TcpNewConnectionAcceptor",
+  srcs = [
+    "TcpNewConnectionAcceptor.h",
+    "TcpNewConnectionAcceptor.cpp",
+  ],
+  deps = [
+    ":network_utils",
+    ":TcpServerControllerInterface",
+    "TcpNewConnectionAcceptorInterface",
+  ],
+  visibility = ["//visibility:public"],
+)
+
+
+##################
+#
+# ServerController
+#
+##################
+
+cc_library(
+  name = "TcpServerControllerInterface",
+  hdrs = ["TcpServerControllerInterface.h"],
+  visibility = ["//visibility:public"],
+)
+cc_library(
+  name = "TcpServerController",
+  srcs = [
+    "TcpServerController.h",
+    "TcpServerController.cpp"
+  ],
+  deps = [
+    ":TcpClientDBManagerInterface",
+    ":TcpClientServiceManagerInterface",
+    ":TcpNewConnectionAcceptorInterface",
+    ":TcpServerControllerInterface",
+    ":network_utils",
+  ],
+  visibility = ["//visibility:public"],
+)
+
+
+##########
+#
+# tcp_main
+#
+##########
+
+cc_binary(
+  name = "tcp_main",
+  srcs = ["testapp.cpp"],
+  deps = [
+    ":TcpServerController",
+    ":TcpNewConnectionAcceptor",
+    ":TcpClientServiceManager",
+    ":TcpClientDBManager",
+  ],
+)
